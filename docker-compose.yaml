@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # Node.js service
+  node_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./__tests__:/usr/src/app/__tests__
+      - ./dist:/usr/src/app/dist
+      - ./node_modules:/usr/src/app/node_modules
+    env_file:
+      - .env
+    ports:
+      - "3030:3030"
+    depends_on:
+      - postgres
+    command: npm run dev
+
+  # PostgreSQL service
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
