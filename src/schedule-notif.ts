@@ -16,4 +16,12 @@ export const scheduleNotif = schedule.scheduleJob('0 9 * * *', async () => {
   users.forEach((user) => {
     notificationService.sendNotification(user);
   });
+
+  users.forEach((user) => {
+    const userTimeZone = user.location;
+    const userNow = new Date(today.toLocaleString("en-US", { timeZone: userTimeZone }));
+    if (userNow.getHours() >= 9) {
+      notificationService.sendNotification(user);
+    }
+  });
 });
